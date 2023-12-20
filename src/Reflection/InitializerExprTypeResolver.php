@@ -495,10 +495,6 @@ class InitializerExprTypeResolver
 		$arrayBuilder = ConstantArrayTypeBuilder::createEmpty();
 		$isList = null;
 		foreach ($expr->items as $arrayItem) {
-			if ($arrayItem === null) {
-				continue;
-			}
-
 			$valueType = $getTypeCallback($arrayItem->value);
 			if ($arrayItem->unpack) {
 				if (count($valueType->getConstantArrays()) === 1) {
