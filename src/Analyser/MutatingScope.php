@@ -21,10 +21,10 @@ use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Expr\PropertyFetch;
 use PhpParser\Node\Expr\Variable;
+use PhpParser\Node\InterpolatedStringPart;
 use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Scalar\DNumber;
-use PhpParser\Node\Scalar\EncapsedStringPart;
 use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\NodeFinder;
@@ -1086,16 +1086,16 @@ class MutatingScope implements Scope
 			return $this->initializerExprTypeResolver->getType($node, InitializerExprContext::fromScope($this));
 		} elseif ($node instanceof String_) {
 			return $this->initializerExprTypeResolver->getType($node, InitializerExprContext::fromScope($this));
-		} elseif ($node instanceof Node\Scalar\Encapsed) {
+		} elseif ($node instanceof Node\Scalar\InterpolatedString) {
 			$resultType = null;
-
 			foreach ($node->parts as $part) {
-				$partType = $part instanceof EncapsedStringPart
-					? new ConstantStringType($part->value)
-					: $this->getType($part)->toString();
+				if ($part instanceof InterpolatedStringPart) {
+					$partType = new ConstantStringType($part->value);
+				} else {
+					$partType = $this->getType($part);
+				}
 				if ($resultType === null) {
 					$resultType = $partType;
-
 					continue;
 				}
 
@@ -2999,9 +2999,6 @@ class MutatingScope implements Scope
 				continue;
 			}
 			foreach ($variables as $variable) {
-				if (!$variable instanceof Variable) {
-					continue 2;
-				}
 				if (!is_string($variable->name)) {
 					continue 2;
 				}
@@ -4303,7 +4300,7 @@ class MutatingScope implements Scope
 	}
 
 	/**
-	 * @param Expr\ClosureUse[] $byRefUses
+	 * @param Node\ClosureUse[] $byRefUses
 	 */
 	public function processClosureScope(
 		self $closureScope,
