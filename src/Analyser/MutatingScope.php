@@ -24,8 +24,6 @@ use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\InterpolatedStringPart;
 use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified;
-use PhpParser\Node\Scalar\DNumber;
-use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\NodeFinder;
 use PHPStan\Node\ExecutionEndNode;
@@ -1082,7 +1080,7 @@ class MutatingScope implements Scope
 			return $this->getType($node->expr);
 		}
 
-		if ($node instanceof LNumber) {
+		if ($node instanceof Node\Scalar\Int_) {
 			return $this->initializerExprTypeResolver->getType($node, InitializerExprContext::fromScope($this));
 		} elseif ($node instanceof String_) {
 			return $this->initializerExprTypeResolver->getType($node, InitializerExprContext::fromScope($this));
@@ -1106,7 +1104,7 @@ class MutatingScope implements Scope
 			}
 
 			return $resultType ?? new ConstantStringType('');
-		} elseif ($node instanceof DNumber) {
+		} elseif ($node instanceof Node\Scalar\Float_) {
 			return $this->initializerExprTypeResolver->getType($node, InitializerExprContext::fromScope($this));
 		} elseif ($node instanceof Expr\CallLike && $node->isFirstClassCallable()) {
 			if ($node instanceof FuncCall) {
@@ -1466,10 +1464,10 @@ class MutatingScope implements Scope
 			}
 
 			if ($node instanceof Expr\PreInc) {
-				return $this->getType(new BinaryOp\Plus($node->var, new LNumber(1)));
+				return $this->getType(new BinaryOp\Plus($node->var, new Node\Scalar\Int_(1)));
 			}
 
-			return $this->getType(new BinaryOp\Minus($node->var, new LNumber(1)));
+			return $this->getType(new BinaryOp\Minus($node->var, new Node\Scalar\Int_(1)));
 		} elseif ($node instanceof Expr\Yield_) {
 			$functionReflection = $this->getFunction();
 			if ($functionReflection === null) {
