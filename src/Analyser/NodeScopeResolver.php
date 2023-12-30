@@ -425,7 +425,7 @@ class NodeScopeResolver
 				$nodeCallback($declare->value, $scope);
 				if (
 					$declare->key->name !== 'strict_types'
-					|| !($declare->value instanceof Node\Scalar\LNumber)
+					|| !($declare->value instanceof Node\Scalar\Int_)
 					|| $declare->value->value !== 1
 				) {
 					continue;
@@ -4115,7 +4115,7 @@ class NodeScopeResolver
 				$throwPoints = array_merge($throwPoints, $valueResult->getThrowPoints());
 
 				if ($arrayItem->key === null) {
-					$dimExpr = new Node\Scalar\LNumber($i);
+					$dimExpr = new Node\Scalar\Int_($i);
 				} else {
 					$dimExpr = $arrayItem->key;
 				}
