@@ -3,7 +3,6 @@
 namespace PHPStan\Parser;
 
 use PhpParser\ErrorHandler\Collecting;
-use PhpParser\Lexer;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
@@ -35,7 +34,6 @@ class RichParser implements Parser
 
 	public function __construct(
 		private \PhpParser\Parser $parser,
-		private Lexer $lexer,
 		private NameResolver $nameResolver,
 		private Container $container,
 		private IgnoreLexer $ignoreLexer,

@@ -1830,7 +1830,6 @@ services:
 		class: PHPStan\Parser\RichParser
 		arguments:
 			parser: @currentPhpVersionPhpParser
-			lexer: @currentPhpVersionLexer
 		autowired: no
 
 	currentPhpVersionSimpleParser:
