@@ -1479,7 +1479,7 @@ class NodeScopeResolver
 				$finallyScope = $finallyScope->mergeWith($throwPoint->getScope());
 			}
 
-			if ($finallyScope !== null && $stmt->finally !== null) {
+			if ($finallyScope !== null) {
 				$originalFinallyScope = $finallyScope;
 				$finallyResult = $this->processStmtNodes($stmt->finally, $stmt->finally->stmts, $finallyScope, $nodeCallback, $context);
 				$alwaysTerminating = $alwaysTerminating || $finallyResult->isAlwaysTerminating();
@@ -2492,9 +2492,6 @@ class NodeScopeResolver
 			$throwPoints = [];
 			foreach ($expr->items as $arrayItem) {
 				$itemNodes[] = new LiteralArrayItem($scope, $arrayItem);
-				if ($arrayItem === null) {
-					continue;
-				}
 				$nodeCallback($arrayItem, $scope);
 				if ($arrayItem->key !== null) {
 					$keyResult = $this->processExprNode($stmt, $arrayItem->key, $scope, $nodeCallback, $context->enterDeep());
